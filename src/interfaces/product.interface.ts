@@ -1,7 +1,7 @@
 export interface NewProduct {
-  title: string;
-  price: number;
-  orderId: number;
+  name: string;
+  amount: string;
+  orderId: number | null;
 }
 
 export interface Product extends NewProduct {

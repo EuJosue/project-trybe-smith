@@ -23,23 +23,23 @@ export default class ProductModel {
   }
 
   async create(product: NewProduct): Promise<Product> {
-    const { title, price, orderId } = product;
+    const { name, amount, orderId } = product;
 
-    const query = 'INSERT INTO Trybesmith.products (title, price, order_id) VALUES (?, ?, ?)';
-    const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [title, price, orderId]);
+    const query = 'INSERT INTO Trybesmith.products (name, amount, order_id) VALUES (?, ?, ?)';
+    const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId]);
 
     return { id: insertId, ...product };
   }
 
   async findOrCreate(product: NewProduct): Promise<[Product, boolean]> {
-    const { title, price, orderId } = product;
+    const { name, amount, orderId } = product;
 
-    const query = 'SELECT * FROM Trybesmith.products WHERE title = ? AND price = ? AND order_id = ?';
-    const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [title, price, orderId]);
+    const query = 'SELECT * FROM Trybesmith.products WHERE name = ? AND amount = ? AND order_id = ?';
+    const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [name, amount, orderId]);
 
     if (!foundProduct) {
-      const query = 'INSERT INTO Trybesmith.products (title, price, order_id) VALUES (?, ?, ?)';
-      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [title, price, orderId]);
+      const query = 'INSERT INTO Trybesmith.products (name, amount, order_id) VALUES (?, ?, ?)';
+      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId]);
 
       return [{ id: insertId, ...product }, true];
     }
@@ -48,10 +48,10 @@ export default class ProductModel {
   }
 
   async update(id: number, product: NewProduct): Promise<Product> {
-    const { title, price, orderId } = product;
+    const { name, amount, orderId } = product;
 
-    const query = 'UPDATE Trybesmith.products SET title = ?, price = ?, order_id = ? WHERE id = ?';
-    await this.connection.execute<ResultSetHeader>(query, [title, price, orderId, id]);
+    const query = 'UPDATE Trybesmith.products SET name = ?, amount = ?, order_id = ? WHERE id = ?';
+    await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId, id]);
 
     return { id, ...product };
   }
