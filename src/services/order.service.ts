@@ -1,4 +1,4 @@
-import { Order } from "../interfaces/order.interface";
+import { NewOrder, Order } from "../interfaces/order.interface";
 import OrderModel from "../models/Order";
 import connection from "../models/connection";
 import httpError from "../utils/httpError";
@@ -23,13 +23,13 @@ export default class OrderService {
     return book;
   }
 
-  async create(order: Order): Promise<Order> {
+  async create(order: NewOrder): Promise<Order> {
     const newOrder = await this.model.create(order);
 
     return newOrder;
   }
 
-  async update(id: number, order: Order): Promise<Order> {
+  async update(id: number, order: NewOrder): Promise<Order> {
     const foundOrder = await this.model.findById(id);
 
     if (!foundOrder) throw httpError.notFound('Order does not exist');
