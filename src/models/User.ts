@@ -22,9 +22,9 @@ export default class UserModel {
     return user as User;
   }
 
-  async findByEmail(email: string): Promise<User> {
-    const query = 'SELECT * FROM Trybesmith.users WHERE email = ?';
-    const [[user]] = await this.connection.execute<RowDataPacket[]>(query, [email]);
+  async findByUsername(username: string): Promise<User> {
+    const query = 'SELECT * FROM Trybesmith.users WHERE username = ?';
+    const [[user]] = await this.connection.execute<RowDataPacket[]>(query, [username]);
 
     return user as User;
   }

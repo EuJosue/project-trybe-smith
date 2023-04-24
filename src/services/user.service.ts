@@ -54,8 +54,8 @@ export default class UserService {
     await this.model.remove(id);
   }
 
-  async login(email: string, password: string): Promise<string> {
-    const user = await this.model.findByEmail(email);
+  async login(username: string, password: string): Promise<string> {
+    const user = await this.model.findByUsername(username);
 
     if (!user || user.password !== password) {
       throw httpError.unauthorized('Username or password invalid');

@@ -14,6 +14,7 @@ export default class UserController {
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.remove = this.remove.bind(this);
+    this.login = this.login.bind(this);
   }
 
   async findAll(_req: Request, res: Response) {
@@ -56,9 +57,9 @@ export default class UserController {
   }
 
   async login(req: Request, res: Response) {
-    const { email, password } = req.body as Login;
+    const { username, password } = req.body as Login;
 
-    const token = await this.userService.login(email, password);
+    const token = await this.userService.login(username, password);
 
     return res.status(200).json({ token });
   }
