@@ -31,6 +31,22 @@ export default class UserModel {
     return { id: insertId, ...user };
   }
 
+  async findOrCreate(user: NewUser): Promise<[User, boolean]> {
+    const { level, password, username, vocation } = user;
+
+    const query = 'SELECT * FROM Trybesmith.products WHERE level = ?, password = ?, username = ?, vocation = ?';
+    const [[foundUser]] = await this.connection.execute<RowDataPacket[]>(query, [level, password, username, vocation]);
+
+    if (!foundUser) {
+      const query = 'INSERT INTO Trybesmith.products (level, password, username, vocation) VALUES (?, ?, ?, ?)';
+      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [level, password, username, vocation]);
+
+      return [{ id: insertId, ...user }, true];
+    }
+
+    return [foundUser as User, false];
+  }
+
   async update(id: number, user: NewUser): Promise<User> {
     const { level, password, username, vocation } = user;
 
