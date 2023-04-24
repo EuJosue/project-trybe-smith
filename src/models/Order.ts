@@ -1,7 +1,7 @@
 import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { NewOrder, Order } from '../interfaces/order.interface';
 
-export default class UserModel {
+export default class OrderModel {
   connection: Pool;
 
   constructor(connection: Pool) {
