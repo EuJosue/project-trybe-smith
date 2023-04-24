@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import OrderService from "../services/order.service";
 import { NewOrder } from "../interfaces/order.interface";
 
-export default class UserController {
+export default class OrderController {
   orderService: OrderService;
 
   constructor(orderService = new OrderService()) {
