@@ -31,6 +31,22 @@ export default class ProductModel {
     return { id: insertId, ...product };
   }
 
+  async findOrCreate(product: NewProduct): Promise<[Product, boolean]> {
+    const { title, price, orderId } = product;
+
+    const query = 'SELECT * FROM Trybesmith.products WHERE title = ? AND price = ? AND order_id = ?';
+    const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [title, price, orderId]);
+
+    if (!foundProduct) {
+      const query = 'INSERT INTO Trybesmith.products (title, price, order_id) VALUES (?, ?, ?)';
+      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [title, price, orderId]);
+
+      return [{ id: insertId, ...product }, true];
+    }
+
+    return [foundProduct as Product, false];
+  }
+
   async update(id: number, product: NewProduct): Promise<Product> {
     const { title, price, orderId } = product;
 
