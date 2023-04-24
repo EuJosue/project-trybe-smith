@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import OrderService from "../services/order.service";
-import { NewOrder } from "../interfaces/order.interface";
+import { Request, Response } from 'express';
+import OrderService from '../services/order.service';
+import { NewOrder } from '../interfaces/order.interface';
 
 export default class OrderController {
   orderService: OrderService;
@@ -53,4 +53,4 @@ export default class OrderController {
 
     return res.status(204).end();
   }
-};
+}

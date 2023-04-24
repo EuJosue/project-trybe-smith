@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import UserService from "../services/user.service";
-import { NewUser } from "../interfaces/user.interface";
+import { Request, Response } from 'express';
+import UserService from '../services/user.service';
+import { NewUser } from '../interfaces/user.interface';
 
 export default class UserController {
   userService: UserService;
@@ -53,4 +53,4 @@ export default class UserController {
 
     return res.status(204).end();
   }
-};
+}

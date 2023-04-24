@@ -26,7 +26,8 @@ export default class ProductModel {
     const { name, amount, orderId = null } = product;
 
     const query = 'INSERT INTO Trybesmith.products (name, amount, order_id) VALUES (?, ?, ?)';
-    const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId]);
+    const [{ insertId }] = await this.connection
+      .execute<ResultSetHeader>(query, [name, amount, orderId]);
 
     return { id: insertId, ...product };
   }
@@ -34,12 +35,16 @@ export default class ProductModel {
   async findOrCreate(product: NewProduct): Promise<[Product, boolean]> {
     const { name, amount, orderId = null } = product;
 
-    const query = 'SELECT * FROM Trybesmith.products WHERE name = ? AND amount = ? AND order_id = ?';
-    const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [name, amount, orderId]);
+    const query = `SELECT * FROM Trybesmith.products
+      WHERE name = ? AND amount = ? AND order_id = ?`;
+    const [[foundProduct]] = await this.connection
+      .execute<RowDataPacket[]>(query, [name, amount, orderId]);
 
     if (!foundProduct) {
-      const query = 'INSERT INTO Trybesmith.products (name, amount, order_id) VALUES (?, ?, ?)';
-      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId]);
+      const queryInsert = `INSERT INTO Trybesmith.products (name, amount, order_id)
+        VALUES (?, ?, ?)`;
+      const [{ insertId }] = await this.connection
+        .execute<ResultSetHeader>(queryInsert, [name, amount, orderId]);
 
       return [{ id: insertId, ...product }, true];
     }

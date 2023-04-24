@@ -1,6 +1,6 @@
 import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { NewOrder, Order } from '../interfaces/order.interface';
-import { camelizeKeys } from '../utils/camelize';
+import { NewOrder, Order, OrderWithProducts } from '../interfaces/order.interface';
+import camelize from '../utils/camelize';
 
 export default class OrderModel {
   connection: Pool;
@@ -9,7 +9,7 @@ export default class OrderModel {
     this.connection = connection;
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<OrderWithProducts[]> {
     const query = 'SELECT * FROM Trybesmith.orders';
     const [orders] = await this.connection.execute<RowDataPacket[]>(query);
     
@@ -22,17 +22,17 @@ export default class OrderModel {
       return {
         ...order,
         productsIds: products.map((product) => product.id),
-      }
+      };
     }));
 
-    return ordersWithProductsIds.map((data) => camelizeKeys(data)) as Order[];
+    return ordersWithProductsIds.map((data) => camelize(data)) as OrderWithProducts[];
   }
 
   async findById(id: number | string): Promise<Order> {
     const query = 'SELECT * FROM Trybesmith.orders WHERE id = ?';
     const [[order]] = await this.connection.execute<RowDataPacket[]>(query, [id]);
 
-    return camelizeKeys(order) as Order;
+    return camelize(order) as Order;
   }
 
   async create(order: NewOrder): Promise<Order> {
@@ -41,7 +41,7 @@ export default class OrderModel {
     const query = 'INSERT INTO Trybesmith.orders (user_id) VALUES (?)';
     const [{ insertId }] = await this.connection.execute<ResultSetHeader>(query, [userId]);
 
-    return camelizeKeys({ id: insertId, ...order }) as Order;
+    return camelize({ id: insertId, ...order }) as Order;
   }
 
   async update(id: number, order: NewOrder): Promise<Order> {
@@ -50,7 +50,7 @@ export default class OrderModel {
     const query = 'UPDATE Trybesmith.orders SET user_id = ? WHERE id = ?';
     await this.connection.execute<ResultSetHeader>(query, [userId, id]);
 
-    return camelizeKeys({ id, ...order }) as Order;
+    return camelize({ id, ...order }) as Order;
   }
 
   async remove(id: number): Promise<void> {

@@ -1,8 +1,8 @@
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 import ApiError from '../utils/ApiError';
-import * as express from 'express';
 
-const errorHandler = (error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+const errorHandler = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof ApiError) {
     return res.status(error.statusCode).json({ message: error.message });
   }

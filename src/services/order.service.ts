@@ -1,7 +1,9 @@
-import { NewOrder, Order } from "../interfaces/order.interface";
-import OrderModel from "../models/Order";
-import connection from "../models/connection";
-import httpError from "../utils/httpError";
+import { NewOrder, Order } from '../interfaces/order.interface';
+import OrderModel from '../models/Order';
+import connection from '../models/connection';
+import httpError from '../utils/httpError';
+
+const orderNotExist = 'Order does not exist';
 
 export default class OrderService {
   model: OrderModel;
@@ -18,7 +20,7 @@ export default class OrderService {
   async findById(id: number): Promise<Order> {
     const book = await this.model.findById(id);
 
-    if (!book) throw httpError.notFound('Order does not exist');
+    if (!book) throw httpError.notFound(orderNotExist);
 
     return book;
   }
@@ -32,7 +34,7 @@ export default class OrderService {
   async update(id: number, order: NewOrder): Promise<Order> {
     const foundOrder = await this.model.findById(id);
 
-    if (!foundOrder) throw httpError.notFound('Order does not exist');
+    if (!foundOrder) throw httpError.notFound(orderNotExist);
 
     const updatedOrder = await this.model.update(id, order);
 
@@ -42,7 +44,7 @@ export default class OrderService {
   async remove(id: number): Promise<void> {
     const foundOrder = await this.model.findById(id);
 
-    if (!foundOrder) throw httpError.notFound('Order does not exist');
+    if (!foundOrder) throw httpError.notFound(orderNotExist);
 
     await this.model.remove(id);
   }

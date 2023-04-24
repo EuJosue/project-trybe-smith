@@ -1,4 +1,4 @@
-import ApiError from "./ApiError";
+import ApiError from './ApiError';
 
 type HttpError = {
   notFound: (message: string) => ApiError;

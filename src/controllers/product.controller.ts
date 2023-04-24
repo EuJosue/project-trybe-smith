@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import ProductService from "../services/product.service";
-import { NewProduct } from "../interfaces/product.interface";
+import { Request, Response } from 'express';
+import ProductService from '../services/product.service';
+import { NewProduct } from '../interfaces/product.interface';
 
 export default class ProductController {
   productService: ProductService;
@@ -53,4 +53,4 @@ export default class ProductController {
 
     return res.status(204).end();
   }
-};
+}

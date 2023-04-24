@@ -1,8 +1,10 @@
-import { NewUser, User } from "../interfaces/user.interface";
-import UserModel from "../models/User";
-import connection from "../models/connection";
-import { generateToken } from "../utils/auth/jwt";
-import httpError from "../utils/httpError";
+import { NewUser, User } from '../interfaces/user.interface';
+import UserModel from '../models/User';
+import connection from '../models/connection';
+import { generateToken } from '../utils/auth/jwt';
+import httpError from '../utils/httpError';
+
+const userNotExist = 'User does not exist';
 
 export default class UserService {
   model: UserModel;
@@ -19,7 +21,7 @@ export default class UserService {
   async findById(id: number): Promise<User> {
     const user = await this.model.findById(id);
 
-    if (!user) throw httpError.notFound('User does not exist');
+    if (!user) throw httpError.notFound(userNotExist);
 
     return user;
   }
@@ -37,7 +39,7 @@ export default class UserService {
   async update(id: number, user: NewUser): Promise<User> {
     const foundProduct = await this.findById(id);
 
-    if (!foundProduct) throw httpError.notFound('User does not exist');
+    if (!foundProduct) throw httpError.notFound(userNotExist);
 
     const updatedProduct = await this.model.update(id, user);
 
@@ -47,7 +49,7 @@ export default class UserService {
   async remove(id: number): Promise<void> {
     const foundProduct = await this.findById(id);
 
-    if (!foundProduct) throw httpError.notFound('User does not exist');
+    if (!foundProduct) throw httpError.notFound(userNotExist);
 
     await this.model.remove(id);
   }

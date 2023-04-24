@@ -25,8 +25,11 @@ export default class UserModel {
   async create(user: NewUser): Promise<User> {
     const { level, password, username, vocation } = user;
 
-    const query = 'INSERT INTO Trybesmith.users (level, password, username, vocation) VALUES (?, ?, ?, ?)';
-    const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [level, password, username, vocation]);
+    const query = `INSERT INTO Trybesmith.users (level, password, username, vocation)
+      VALUES (?, ?, ?, ?)`;
+
+    const [{ insertId }] = await this.connection
+      .execute<ResultSetHeader>(query, [level, password, username, vocation]);
 
     return { id: insertId, ...user };
   }
@@ -35,11 +38,14 @@ export default class UserModel {
     const { level, password, username, vocation } = user;
 
     const query = 'SELECT * FROM Trybesmith.users WHERE username = ?';
-    const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [level, password, username, vocation]);
+    const [[foundProduct]] = await this.connection
+      .execute<RowDataPacket[]>(query, [level, password, username, vocation]);
 
     if (!foundProduct) {
-      const query = 'INSERT INTO Trybesmith.users (level, password, username, vocation) VALUES (?, ?, ?, ?)';
-      const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [level, password, username, vocation]);
+      const queryInsert = `INSERT INTO Trybesmith.users (level, password, username, vocation)
+        VALUES (?, ?, ?, ?)`;
+      const [{ insertId }] = await this.connection
+        .execute<ResultSetHeader>(queryInsert, [level, password, username, vocation]);
 
       return [{ id: insertId, ...user }, true];
     }
@@ -50,8 +56,10 @@ export default class UserModel {
   async update(id: number, user: NewUser): Promise<User> {
     const { level, password, username, vocation } = user;
 
-    const query = 'UPDATE Trybesmith.users SET level = ?, password = ?, username = ?, vocation = ? WHERE id = ?';
-    await this.connection.execute<ResultSetHeader>(query, [level, password, username, vocation, id]);
+    const query = `UPDATE Trybesmith.users
+      SET level = ?, password = ?, username = ?, vocation = ? WHERE id = ?`;
+    await this.connection
+      .execute<ResultSetHeader>(query, [level, password, username, vocation, id]);
 
     return { id, ...user };
   }
