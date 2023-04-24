@@ -1,50 +1,51 @@
-import { NewUser } from "../interfaces/user.interface";
+import { NewUser, User } from "../interfaces/user.interface";
 import UserModel from "../models/User";
 import connection from "../models/connection";
 import httpError from "../utils/httpError";
 
-const User = new UserModel(connection);
+export default class UserService {
+  model: UserModel;
 
-const findAll = async () => User.findAll();
+  constructor() {
+    this.model = new UserModel(connection);
+  }
 
-const findById = async (id: number) => {
-  const user = User.findById(id);
+  async findAll(): Promise<User[]> {
+    const products = await this.model.findAll();
+    return products;
+  }
 
-  if (!user) throw httpError.notFound('User does not exist');
+  async findById(id: number): Promise<User> {
+    const user = await this.model.findById(id);
 
-  return user;
-};
+    if (!user) throw httpError.notFound('User does not exist');
 
-const create = async (user: NewUser) => {
-  const [newUser, created] = await User.findOrCreate(user);
+    return user;
+  }
 
-  if (!created) throw httpError.badRequest('User already exists');
+  async create(user: NewUser): Promise<User> {
+    const [newProduct, created] = await this.model.findOrCreate(user);
 
-  return newUser;
-};
+    if (!created) throw httpError.badRequest('User already exists');
 
-const update = async (id: number, user: NewUser) => {
-  const foundUser = await findById(id);
+    return newProduct;
+  }
 
-  if (!foundUser) throw httpError.notFound('User does not exist');
+  async update(id: number, user: NewUser): Promise<User> {
+    const foundProduct = await this.findById(id);
 
-  const updatedUser = await User.update(id, user);
+    if (!foundProduct) throw httpError.notFound('User does not exist');
 
-  return updatedUser;
-};
+    const updatedProduct = await this.model.update(id, user);
 
-const remove = async (id: number) => {
-  const foundUser = await findById(id);
+    return updatedProduct;
+  }
 
-  if (!foundUser) throw httpError.notFound('User does not exist');
+  async remove(id: number): Promise<void> {
+    const foundProduct = await this.findById(id);
 
-  await User.remove(id);
-};
+    if (!foundProduct) throw httpError.notFound('User does not exist');
 
-export default {
-  findAll,
-  findById,
-  create,
-  update,
-  remove,
-};
+    await this.model.remove(id);
+  }
+}
