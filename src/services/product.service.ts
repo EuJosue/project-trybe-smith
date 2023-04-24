@@ -1,50 +1,51 @@
-import { NewProduct } from "../interfaces/product.interface";
+import { NewProduct, Product } from "../interfaces/product.interface";
 import ProductModel from "../models/Product";
 import connection from "../models/connection";
 import httpError from "../utils/httpError";
 
-const Product = new ProductModel(connection);
+export default class ProductService {
+  model: ProductModel;
 
-const findAll = async () => Product.findAll();
+  constructor() {
+    this.model = new ProductModel(connection);
+  }
 
-const findById = async (id: number) => {
-  const product = await Product.findById(id);
+  async findAll(): Promise<Product[]> {
+    const products = await this.model.findAll();
+    return products;
+  }
 
-  if (!product) throw httpError.notFound('Product does not exist');
+  async findById(id: number): Promise<Product> {
+    const product = await this.model.findById(id);
 
-  return product;
-};
+    if (!product) throw httpError.notFound('Product does not exist');
 
-const create = async (product: NewProduct) => {
-  const [newProduct, created] = await Product.findOrCreate(product);
+    return product;
+  }
 
-  if (!created) throw httpError.badRequest('Product already exists');
+  async create(product: NewProduct): Promise<Product> {
+    const [newProduct, created] = await this.model.findOrCreate(product);
 
-  return newProduct;
-};
+    if (!created) throw httpError.badRequest('Product already exists');
 
-const update = async (id: number, product: NewProduct) => {
-  const foundProduct = await findById(id);
+    return newProduct;
+  }
 
-  if (!foundProduct) throw httpError.notFound('Product does not exist');
+  async update(id: number, product: NewProduct): Promise<Product> {
+    const foundProduct = await this.findById(id);
 
-  const updatedProduct = await Product.update(id, product);
+    if (!foundProduct) throw httpError.notFound('Product does not exist');
 
-  return updatedProduct;
-};
+    const updatedProduct = await this.model.update(id, product);
 
-const remove = async (id: number) => {
-  const foundProduct = await findById(id);
+    return updatedProduct;
+  }
 
-  if (!foundProduct) throw httpError.notFound('Product does not exist');
+  async remove(id: number): Promise<void> {
+    const foundProduct = await this.findById(id);
 
-  await Product.remove(id);
-};
+    if (!foundProduct) throw httpError.notFound('Product does not exist');
 
-export default {
-  findAll,
-  findById,
-  create,
-  update,
-  remove,
+    await this.model.remove(id);
+  }
 };
