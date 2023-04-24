@@ -15,13 +15,13 @@ export default class ProductController {
     this.remove = this.remove.bind(this);
   }
 
-  async findAll(_req: Request, res: Response, next: NextFunction) {
+  async findAll(_req: Request, res: Response) {
     const products = await this.productService.findAll();
 
     return res.status(200).json(products);
   }
 
-  async findById(req: Request, res: Response, next: NextFunction) {
+  async findById(req: Request, res: Response) {
     const { id } = req.params;
 
     const product = await this.productService.findById(Number(id));
@@ -29,7 +29,7 @@ export default class ProductController {
     return res.status(200).json(product);
   }
 
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response) {
     const newProduct = req.body as NewProduct;
 
     const product = await this.productService.create(newProduct);
@@ -37,7 +37,7 @@ export default class ProductController {
     return res.status(201).json(product);
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
     const updatedProduct = req.body as NewProduct;
 
@@ -46,7 +46,7 @@ export default class ProductController {
     return res.status(200).json(product);
   }
 
-  async remove(req: Request, res: Response, next: NextFunction) {
+  async remove(req: Request, res: Response) {
     const { id } = req.params;
 
     await this.productService.remove(Number(id));
