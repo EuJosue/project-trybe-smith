@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import ProductService from "../services/product.service";
 import { NewProduct } from "../interfaces/product.interface";
 
