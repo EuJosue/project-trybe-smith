@@ -22,6 +22,13 @@ export default class UserModel {
     return user as User;
   }
 
+  async findByEmail(email: string): Promise<User> {
+    const query = 'SELECT * FROM Trybesmith.users WHERE email = ?';
+    const [[user]] = await this.connection.execute<RowDataPacket[]>(query, [email]);
+
+    return user as User;
+  }
+
   async create(user: NewUser): Promise<User> {
     const { level, password, username, vocation } = user;
 
