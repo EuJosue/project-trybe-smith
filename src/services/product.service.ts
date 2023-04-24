@@ -16,9 +16,9 @@ const findById = async (id: number) => {
 };
 
 const create = async (product: NewProduct) => {
-  const newProduct = await Product.findOrCreate(product);
+  const [newProduct, created] = await Product.findOrCreate(product);
 
-  if (!newProduct) throw httpError.badRequest('Product already exists');
+  if (!created) throw httpError.badRequest('Product already exists');
 
   return newProduct;
 };
