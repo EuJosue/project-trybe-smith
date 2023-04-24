@@ -1,6 +1,7 @@
 import { NewUser, User } from "../interfaces/user.interface";
 import UserModel from "../models/User";
 import connection from "../models/connection";
+import { generateToken } from "../utils/auth/jwt";
 import httpError from "../utils/httpError";
 
 export default class UserService {
@@ -23,12 +24,14 @@ export default class UserService {
     return user;
   }
 
-  async create(user: NewUser): Promise<User> {
-    const [newProduct, created] = await this.model.findOrCreate(user);
+  async create(user: NewUser): Promise<string> {
+    const [newUser, created] = await this.model.findOrCreate(user);
 
     if (!created) throw httpError.badRequest('User already exists');
 
-    return newProduct;
+    const token = generateToken(newUser);
+
+    return token;
   }
 
   async update(id: number, user: NewUser): Promise<User> {

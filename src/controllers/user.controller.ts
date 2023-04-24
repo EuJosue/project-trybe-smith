@@ -32,9 +32,9 @@ export default class UserController {
   async create(req: Request, res: Response) {
     const newUser = req.body as NewUser;
 
-    const user = await this.userService.create(newUser);
+    const token = await this.userService.create(newUser);
 
-    return res.status(201).json(user);
+    return res.status(201).json({ token });
   }
 
   async update(req: Request, res: Response) {
