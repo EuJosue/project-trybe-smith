@@ -53,4 +53,16 @@ export default class UserService {
 
     await this.model.remove(id);
   }
+
+  async login(email: string, password: string): Promise<string> {
+    const user = await this.model.findByEmail(email);
+
+    if (!user || user.password !== password) {
+      throw httpError.unauthorized('Username or password invalid');
+    }
+
+    const token = generateToken(user);
+
+    return token;
+  }
 }
