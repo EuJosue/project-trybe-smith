@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
 import { NewUser } from '../interfaces/user.interface';
+import { Login } from '../interfaces/login.interface';
 
 export default class UserController {
   userService: UserService;
@@ -52,5 +53,13 @@ export default class UserController {
     await this.userService.remove(Number(id));
 
     return res.status(204).end();
+  }
+
+  async login(req: Request, res: Response) {
+    const { email, password } = req.body as Login;
+
+    const token = await this.userService.login(email, password);
+
+    return res.status(200).json({ token });
   }
 }
