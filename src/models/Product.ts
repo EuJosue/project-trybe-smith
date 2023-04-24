@@ -23,7 +23,7 @@ export default class ProductModel {
   }
 
   async create(product: NewProduct): Promise<Product> {
-    const { name, amount, orderId } = product;
+    const { name, amount, orderId = null } = product;
 
     const query = 'INSERT INTO Trybesmith.products (name, amount, order_id) VALUES (?, ?, ?)';
     const [{insertId}] = await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId]);
@@ -32,7 +32,7 @@ export default class ProductModel {
   }
 
   async findOrCreate(product: NewProduct): Promise<[Product, boolean]> {
-    const { name, amount, orderId } = product;
+    const { name, amount, orderId = null } = product;
 
     const query = 'SELECT * FROM Trybesmith.products WHERE name = ? AND amount = ? AND order_id = ?';
     const [[foundProduct]] = await this.connection.execute<RowDataPacket[]>(query, [name, amount, orderId]);
@@ -48,7 +48,7 @@ export default class ProductModel {
   }
 
   async update(id: number, product: NewProduct): Promise<Product> {
-    const { name, amount, orderId } = product;
+    const { name, amount, orderId = null } = product;
 
     const query = 'UPDATE Trybesmith.products SET name = ?, amount = ?, order_id = ? WHERE id = ?';
     await this.connection.execute<ResultSetHeader>(query, [name, amount, orderId, id]);
