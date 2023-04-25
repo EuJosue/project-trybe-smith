@@ -1,38 +1,11 @@
-const statusCodeString = (type: string) => {
-  switch (type) {
-    case 'string.min':
-    case 'string.base':
-      return 422;
-    default:
-      return false;
-  }
+const statusCodeObject: { [param: string]: number } = {
+  'string.min': 422,
+  'string.base': 422,
+  'number.base': 422,
+  'number.min': 422,
+  'array.includesRequiredUnknowns': 422,
+  'array.base': 422,
+  'any.required': 400,
 };
 
-const statusCodeNumber = (type: string) => {
-  switch (type) {
-    case 'number.base':
-    case 'number.min':
-      return 422;
-    default:
-      return false;
-  }
-};
-
-const statusCodeArray = (type: string) => {
-  switch (type) {
-    case 'array.includesRequiredUnknowns':
-    case 'array.base':
-      return 422;
-    default:
-      return false;
-  }
-};
-
-const statusCodeTypes = (type: string) => statusCodeString(type)
-  || statusCodeNumber(type)
-  || statusCodeArray(type)
-  || false;
-
-export default (type: string) => statusCodeTypes(type)
-  || (type.includes('any.required') && 400)
-  || 500;
+export default (type: string) => statusCodeObject[type] || 500;
