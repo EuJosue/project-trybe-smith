@@ -16,3 +16,13 @@ export const userJoi = joi.object({
   level: joi.number().min(1).required(),
   password: joi.string().min(8).required(),
 });
+
+export const orderJoi = joi
+  .array()
+  .items(joi.number().required())
+  .required()
+  .label('productsIds')
+  .messages({
+    'number.base': '"productsIds" must include only numbers',
+    'array.includesRequiredUnknowns': '"productsIds" must include only numbers',
+  });
