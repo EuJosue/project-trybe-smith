@@ -8,7 +8,7 @@ const errorHandler = (error: Error, _req: Request, res: Response, _next: NextFun
   }
 
   if (error instanceof JsonWebTokenError || error instanceof TokenExpiredError) {
-    return res.status(401).json({ message: 'Expired or invalid token' });
+    return res.status(401).json({ message: 'Invalid token' });
   }
 
   return res.status(500).json({ message: 'Internal Server Error' });
