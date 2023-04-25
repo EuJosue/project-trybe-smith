@@ -1,18 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { productJoi } from './joi';
 import { NewProduct } from '../interfaces/product.interface';
-
-const statusCode = (type: string) => {
-  switch (type) {
-    case 'any.required':
-      return 400;
-    case 'string.min':
-    case 'string.base':
-      return 422;
-    default:
-      return 500;
-  }
-};
+import statusCode from '../utils/statusCode';
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const product = req.body as NewProduct;
