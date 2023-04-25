@@ -1,8 +1,9 @@
 export interface NewOrder {
-  userId: number;
+  productsIds: number[];
 }
 
-export interface Order extends NewOrder {
+export interface Order {
+  userId: number;
   id: number;
 }
 
