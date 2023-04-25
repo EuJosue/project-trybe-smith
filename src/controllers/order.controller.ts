@@ -29,19 +29,21 @@ export default class OrderController {
     return res.status(200).json(order);
   }
 
-  async create(req: Request, res: Response) {
+  async create(req: Request & { user?: number }, res: Response) {
     const newOrder = req.body as NewOrder;
+    const userId = req.user || 0;
 
-    const order = await this.orderService.create(newOrder);
+    const order = await this.orderService.create(newOrder, userId);
 
     return res.status(201).json(order);
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request & { user?: number }, res: Response) {
     const { id } = req.params;
     const updatedUser = req.body as NewOrder;
+    const userId = req.user || 0;
 
-    const order = await this.orderService.update(Number(id), updatedUser);
+    const order = await this.orderService.update(Number(id), updatedUser, userId);
 
     return res.status(200).json(order);
   }

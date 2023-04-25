@@ -1,4 +1,4 @@
-import { NewOrder, Order } from '../interfaces/order.interface';
+import { NewOrder, Order, OrderWithProductsWithoutId } from '../interfaces/order.interface';
 import OrderModel from '../models/Order';
 import connection from '../models/connection';
 import httpError from '../utils/httpError';
@@ -25,18 +25,18 @@ export default class OrderService {
     return book;
   }
 
-  async create(order: NewOrder): Promise<Order> {
-    const newOrder = await this.model.create(order);
+  async create(order: NewOrder, userId: number): Promise<OrderWithProductsWithoutId> {
+    const newOrder = await this.model.create(order, userId);
 
     return newOrder;
   }
 
-  async update(id: number, order: NewOrder): Promise<Order> {
+  async update(id: number, order: NewOrder, userId: number): Promise<Order> {
     const foundOrder = await this.model.findById(id);
 
     if (!foundOrder) throw httpError.notFound(orderNotExist);
 
-    const updatedOrder = await this.model.update(id, order);
+    const updatedOrder = await this.model.update(id, userId, order);
 
     return updatedOrder;
   }

@@ -1,5 +1,7 @@
 import { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { NewOrder, Order, OrderWithProducts } from '../interfaces/order.interface';
+import {
+  NewOrder, Order, OrderWithProducts, OrderWithProductsWithoutId,
+} from '../interfaces/order.interface';
 import camelize from '../utils/camelize';
 
 export default class OrderModel {
@@ -35,17 +37,23 @@ export default class OrderModel {
     return camelize(order) as Order;
   }
 
-  async create(order: NewOrder): Promise<Order> {
-    const { userId } = order;
+  async create(order: NewOrder, userId: number): Promise<OrderWithProductsWithoutId> {
+    const { productsIds } = order;
 
     const query = 'INSERT INTO Trybesmith.orders (user_id) VALUES (?)';
     const [{ insertId }] = await this.connection.execute<ResultSetHeader>(query, [userId]);
 
-    return camelize({ id: insertId, ...order }) as Order;
+    await Promise.all(productsIds.map(async (productId) => {
+      const queryProducts = 'UPDATE Trybesmith.products SET order_id = ? WHERE id = ?';
+      
+      await this.connection.execute<ResultSetHeader>(queryProducts, [insertId, productId]);
+    }));
+
+    return camelize({ userId, ...order }) as OrderWithProductsWithoutId;
   }
 
-  async update(id: number, order: NewOrder): Promise<Order> {
-    const { userId } = order;
+  async update(id: number, userId: number, order: NewOrder): Promise<Order> {
+    // const { productsIds } = order;
 
     const query = 'UPDATE Trybesmith.orders SET user_id = ? WHERE id = ?';
     await this.connection.execute<ResultSetHeader>(query, [userId, id]);
