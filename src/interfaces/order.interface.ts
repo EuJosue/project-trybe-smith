@@ -10,3 +10,8 @@ export interface Order {
 export interface OrderWithProducts extends Order {
   productsIds: number[];
 }
+
+export interface OrderWithProductsWithoutId {
+  productsIds: number[];
+  userId: number;
+}
